@@ -1,15 +1,16 @@
-.firstPage{
-position: absolute;
-width: 40%;
- margin-left: 30%;
- /* border: 1px solid rgba(170, 170, 170, 0.693); */
- border-radius: 5px;
- margin-top: 2%;
- box-shadow: 1px 2px 10px rgba(150, 150, 150, 0.303);
+.firstPage {
+    position: absolute;
+    width: 40%;
+    margin-left: 30%;
+    /* border: 1px solid rgba(170, 170, 170, 0.693); */
+    border-radius: 5px;
+    margin-top: 2%;
+    box-shadow: 1px 2px 10px rgba(150, 150, 150, 0.303);
 }
+
 .horizontal {
     width: 50%;
-    margin-left: 25%;
+    /* margin-left: 25%; */
     /* width: 10%;
     text-align: center;
     border-bottom: 1px solid gray;
@@ -18,31 +19,61 @@ width: 40%;
     font-size: small;
     position: absolute;
     margin-top: 35px; */
-  }
-  hr{
-      margin-bottom: 2px;
-      /* width: 30%; */
-      /* margin-left: 35%; */
-      
-  }
-  p  {
-   text-align: center;
-  }
-  .app { 
-    display: flex; 
-    width: 100vw; 
-    height: 100vh; 
-    flex-direction: column; 
-    align-items: center; 
+}
+
+hr {
+    margin-bottom: 2px;
+    /* width: 30%; */
+    /* margin-left: 35%; */
+
+}
+
+p {
+    /* text-align: center; */
+}
+label{
+    font-size: smaller !important;
+    font-weight: bold;
+    color: rgb(2, 2, 40);
+    margin-top: 15px;
+}
+.loginDetails{
+    font-size: smaller;
+    font-weight: lighter;
+}
+.app {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
 }
 
 .app__video {
     display: flex;
     align-items: center;
+    margin-top: 15%;
 }
 
 .app__canvas {
     position: absolute;
     top: 100px;
+}
+
+video {
+    width: 100%;
+}
+
+.center-start {
+    /* width: 10%; */
+    margin-left: 35%;
+    margin-top: 30%;
+}
+
+.backdrop {
+    background-image: url("/public/assets/dwn.jpeg");
+    background-repeat: repeat;
+    width: 100%;
+    height: 100vh;
 }

@@ -4,6 +4,8 @@ import FirstPage from './FirstPage.js';
 import { Route, Router, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import ExamPage from './examPage';
+import Test from './test';
+import ViewUsers from './viewUsers';
 function App() {
 
   return (
@@ -13,6 +15,8 @@ function App() {
         <Routes>
           <Route path='/' element={<FirstPage />}></Route>
           <Route  path="/exam" element={<ExamPage />}></Route>
+          <Route  path="/test" element={<Test />}></Route>
+          <Route  path="/view" element={<ViewUsers />}></Route>
         </Routes>
       </BrowserRouter>
       {/* <Router>

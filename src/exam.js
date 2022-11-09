@@ -1,9 +1,8 @@
-import { Alert, AlertIcon, Button, CloseButton, FormControl, FormHelperText, FormLabel, HStack, ListItem, Modal, ModalBody, ModalContent, ModalFooter, ModalOverlay, OrderedList, Radio, RadioGroup, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, CloseButton, Modal, ModalBody, ModalContent, ModalFooter, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 import * as faceapi from "face-api.js";
 import emailjs from 'emailjs-com';
-import axios from 'axios';
 import {
     MeetingProvider,
     MeetingConsumer,
@@ -14,7 +13,6 @@ import { authToken, createMeeting, fetchHlsDownstreamUrl } from "./Api";
 import ReactPlayer from "react-player";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router";
-import { async } from "q";
 
 function JoinScreen({ getMeetingAndToken }) {
     const [meetingId, setMeetingId] = useState(null);
@@ -24,119 +22,25 @@ function JoinScreen({ getMeetingAndToken }) {
     const [visible, isVisible] = useState(false);
     const navigate = useNavigate();
     const onClick = async () => {
-        // if (localStorage.getItem('written') == 'yes') {
-        //     isVisible(true)
-        //     onClose()
-        // Swal.fire({
-        //     text: 'You have already taken this exam ',
-        //     icon: 'error',
-        //     allowOutsideClick: false,
-        //     confirmButtonText: 'OKAY'
-        // }).then(function () {
-        //         window.location.reload();
-        //          navigate('/');
-
-        //   })
-        // } else {
         isloading(true)
         await getMeetingAndToken(meetingId).then();
         setMeetingId(meetingId)
-        // }
-
-        // localStorage.setItem('id', meetingId);
-        //  setMeetingId(localStorage.getItem('id'))
     };
     const showLogin = () => {
         navigate('/')
     }
     useEffect(() => {
-
-        // if(localStorage.getItem('written') !== 'yes'){
         onOpen();
-        // } else{
-        //      Swal.fire({
-        //         text: 'You have already taken this exam ',
-        //         icon: 'error',
-        //         allowOutsideClick: false,
-        //         confirmButtonText: 'OKAY'
-        //     }).then(function () {
-        //             window.location.reload();
-        //              navigate('/');
-
-        //       })
-        // }
-        // getMeetingAndToken(meetingId);
-        // localStorage.setItem('id', meetingId)
     })
 
-
-    // const startVideo = () => {
-    //     setPlay(true);
-    //     onClick();
-    //     navigator.mediaDevices.getUserMedia({ video: true })
-    //         .then((currentStream) => {
-    //             videoRef.current.srcObject = currentStream;
-    //         })
-    //         .catch((err) => {
-    //             console.error(err)
-    //         });
-    //     onClose()
-    // }
-    // useEffect(() => {
-    //     onOpen();
-
-
-    //     videoRef && loadModels();
-    // }, []);
-    // const loadModels = () => {
-    //     Promise.all([
-    //         faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-    //         faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-    //         faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-    //         faceapi.nets.faceExpressionNet.loadFromUri('/models'),
-    //     ]).then(() => {
-    //         faceDetection();
-    //     })
-    // };
-
-    // const faceDetection = async () => {
-    //     setInterval(async () => {
-    //         const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
-    //         console.log(detections)
-    //         if (detections.length == 2) {
-    //             console.log('error')
-    //         }
-    //         if (detections.length == 0) {
-    //             console.log('no face detected')
-    //         }
-
-    //         canvasRef.current.innerHtml = faceapi.createCanvasFromMedia(videoRef.current);
-    //         faceapi.matchDimensions(canvasRef.current, {
-    //             width: 940,
-    //             height: 650,
-    //         })
-
-    //         const resized = faceapi.resizeResults(detections, {
-    //             width: 940,
-    //             height: 650,
-    //         });
-
-    //         faceapi.draw.drawDetections(canvasRef.current, resized)
-    //         faceapi.draw.drawFaceLandmarks(canvasRef.current, resized)
-    //         faceapi.draw.drawFaceExpressions(canvasRef.current, resized)
-
-    //     }, 1000)
-    // }
     return (
         <div className="backdrop">
-            {/* <img src="../assets/dwn.jpeg" style={{ 'width': '100%', "height": '100vh' }} /> */}
             <Modal blockScrollOnMount={true} closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay
                     bg='blackAlpha.400'
                     backdropFilter='blur(10px)'
 
                 />
-
                 <ModalContent>
                     <ModalBody>
                         <Text fontWeight='bold' mb='1rem'>
@@ -155,21 +59,6 @@ function JoinScreen({ getMeetingAndToken }) {
                         <Button style={{ 'width': '50%' }} colorScheme='blue' onClick={onClick} disabled={loading}>{loading ? 'Connecting...' : 'Start'}</Button>
                     </ModalFooter>
                 </ModalContent>
-                {/* :
-                    <ModalContent>
-                        <ModalBody>
-                            <Text fontWeight='bold' mb='1rem'>
-                                You have already taken this exam. You will be redirected to the login page
-                            </Text>
-
-
-                        </ModalBody>
-
-                        <ModalFooter>
-                            <Button style={{ 'width': '50%' }} colorScheme='blue' onClick={onClick} >Okay</Button>
-                        </ModalFooter>
-                    </ModalContent>
-                } */}
             </Modal>
         </div>
     );
@@ -179,11 +68,9 @@ function VideoComponent(props) {
     const webcamRef = useRef(null);
     const micRef = useRef(null);
     const [play, setPlay] = useState(false);
-    const [loading, isLoading] = useState(false);
     const [visible, isVisible] = useState(false);
     const navigate = useNavigate();
     const { toggleWebcam } = useMeeting();
-    const endpoint = "http://localhost:8888/smart_exam_api/v1/controller"
     const { webcamStream, micStream, webcamOn, micOn } = useParticipant(
         props.participantId
     );
@@ -194,56 +81,9 @@ function VideoComponent(props) {
         from_name: "Anna sent testing"
 
     };
-    const showFirstAlert = () =>{
-        Swal.fire({
-            text: 'Are you sure you want to submit this work?. You will not be able to review after you click this button',
-            icon:'warning',
-            allowOutsideClick: false,
-            confirmButtonText: 'SUBMIT'
-        }).then(function(){
-            updateRecord()
-        })
-    }
-   const updateRecord = async () =>{
-    isLoading(true)
-    const newId = localStorage.getItem('ID')
-    const newFile = ({
-        idNumber: newId,
-        grade: 7,
-      })
-    const url = `${endpoint}/grade.php`;
-    await axios.post(url, newFile).then(async (response) => {
-        Swal.fire({
-            text: 'Submitted',
-            icon: 'success',
-            allowOutsideClick: false,
-            confirmButtonText: 'OKAY'
-          }).then(async function(){
-            window.location.reload();
-                  await  navigate('/');
-          })
-    }, err => {
-       Swal.fire({
-            text: 'Oops! Unable to submit records',
-            icon: 'error',
-            allowOutsideClick: false,
-            confirmButtonText: 'OKAY'
-          }).then(async function(){
-           window.location.reload();
-                    navigate('/');
-          })
-    })
-    }
     const sendEmail = () => {
-        const newId = localStorage.getItem('ID')
-        const timing = new Date()
-        const templateParams = {
-            event: 'Two faces detected', student: newId, time_stamp: timing
-
-
-        };
         // emailjs.sendForm('service_3gs0pr5', 'template_e6asvdf', form.current, 'user_kCMlH3on6bQ53ovKUpoX6')
-        emailjs.send('service_ync03is', 'template_6m6h8cl', templateParams, '48eO22ziAQe2BKxJT')
+        emailjs.sendForm('service_ync03is', 'template_6m6h8cl', form.current, '48eO22ziAQe2BKxJT')
 
             .then((result) => {
                 console.log(result.text);
@@ -251,34 +91,6 @@ function VideoComponent(props) {
                 console.log(error.text);
             });
     };
-    const sendEmail1 = () => {
-        const newId = localStorage.getItem('ID')
-        const timing = new Date()
-        const templateParams = {
-            event: 'Unable to detect face', student: newId, time_stamp: timing
-
-
-        };
-        // emailjs.sendForm('service_3gs0pr5', 'template_e6asvdf', form.current, 'user_kCMlH3on6bQ53ovKUpoX6')
-        emailjs.send('service_ync03is', 'template_inb1v1u', templateParams, '48eO22ziAQe2BKxJT')
-
-            .then((result) => {
-                console.log(result.text);
-            }, (error) => {
-                console.log(error.text);
-            });
-    };
-    // setTimeout(() => {
-    //     Swal.fire({
-    //         text: 'You have used up all the time. Session submitted successfully',
-    //         icon: 'info',
-    //         allowOutsideClick: false,
-    //         confirmButtonText: 'OKAY'
-    //     }).then(function () {
-    //             window.location.reload();
-    //              navigate('/')
-    //       })
-    // }, 6000);
     const startVideo = () => {
         setPlay(true);
         videoRef && loadModels();
@@ -311,23 +123,6 @@ function VideoComponent(props) {
         }
     }, [webcamStream, webcamOn]);
     console.log(typeof (videoStream))
-    // useEffect(() => {
-    //     if (webcamRef.current) {
-    //       if (webcamOn) {
-    //         const mediaStream = new MediaStream();
-    //         mediaStream.addTrack(webcamStream.track);
-
-    //         webcamRef.current.srcObject = mediaStream;
-    //         webcamRef.current
-    //           .play()
-    //           .catch((error) =>
-    //             console.error("videoElem.current.play() failed", error)
-    //           );
-    //       } else {
-    //         webcamRef.current.srcObject = null;
-    //       }
-    //     }
-    //   }, [webcamStream, webcamOn]);
     useEffect(() => {
         if (micRef.current) {
             if (micOn) {
@@ -350,23 +145,23 @@ function VideoComponent(props) {
         // setInterval(() => {
         startVideo();
         // }, 5000);
-        // setTimeout(() => {
-        //     isVisible(true)
-        // }, 6000);
+        setTimeout(() => {
+            isVisible(true)
+        }, 6000);
 
-        // const timer = setTimeout(() => {
-        //     Swal.fire({
-        //         text: 'You have used up all the time. Session submitted successfully',
-        //         icon: 'info',
-        //         allowOutsideClick: false,
-        //         confirmButtonText: 'OKAY'
-        //     }).then(function () {
-        //         window.location.reload();
-        //         navigate('/');
-        //         localStorage.setItem('written', 'yes')
-        //     })
-        // }, 36000);
-        // return () => clearTimeout(timer)
+        const timer = setTimeout(() => {
+            Swal.fire({
+                text: 'You have used up all the time. Session submitted successfully',
+                icon: 'info',
+                allowOutsideClick: false,
+                confirmButtonText: 'OKAY'
+            }).then(function () {
+                window.location.reload();
+                navigate('/');
+                localStorage.setItem('written', 'yes')
+            })
+        }, 12000);
+        return () => clearTimeout(timer)
 
 
     }, [])
@@ -377,14 +172,13 @@ function VideoComponent(props) {
             if (detections.length === 2) {
                 setImmediate(console.log('error1'))
                 console.log('error')
-                // sendEmail()
             }
             if (detections.length === 0) {
                 console.log('no face detected');
-                //    setInterval(() => {
-                // sendEmail1()
-                // }, 5000);
-
+               const timer = setTimeout(() => {
+                    sendEmail()
+                }, 5000);
+                return clearTimeout(timer)
 
             }
 
@@ -418,49 +212,7 @@ function VideoComponent(props) {
                         </Alert> : null}
 
                     {/* <Button >show</Button> */}
-                    <div>
-                        <form >
-                        <FormControl as='fieldset'>
-                            <OrderedList>
-                                <ListItem>
-                                What is 1 + 1
-                                    <RadioGroup >
-                                        <Stack>
-                                            <Radio value='2'>2</Radio>
-                                            <Radio value='3'>3</Radio>
-                                            <Radio value='1'>1</Radio>
-                                            <Radio value='5'>5</Radio>
-                                        </Stack>
-                                    </RadioGroup>
-                                </ListItem>
-                                <ListItem>
-                                What is 6 x 6
-                                    <RadioGroup defaultValue='Itachi'>
-                                        <Stack>
-                                            <Radio value='42'>42</Radio>
-                                            <Radio value='36'>36</Radio>
-                                            <Radio value='54'>54</Radio>
-                                            <Radio value='66'>66</Radio>
-                                        </Stack>
-                                    </RadioGroup>
-                                </ListItem>
-                                <ListItem>
-                                What is the capital of Ghana?
-                                    <RadioGroup >
-                                        <Stack>
-                                            <Radio value='Kumasi'>Kumasi</Radio>
-                                            <Radio value='Accra'>Accra</Radio>
-                                            <Radio value='Takoradi'>Takoradi</Radio>
-                                            <Radio value='SSavana'>Savana</Radio>
-                                        </Stack>
-                                    </RadioGroup>
-                                </ListItem>
-                            </OrderedList>
-                        </FormControl>
-                        <Button style={{'marginTop':'10px'}} colorScheme='blue' onClick={showFirstAlert} variant="solid" size='lg' disabled={loading}>{loading? 'Please Wait... ': 'FINISH'}</Button>
-                        </form>
-                    </div>
-                    <ReactPlayer style={{ 'display': 'none' }}
+                    <ReactPlayer style={{ 'display': 'none' }} 
                         //
                         playsinline // very very imp prop
                         pip={false}
@@ -478,12 +230,13 @@ function VideoComponent(props) {
                         }}
                     />
 
-                    <div style={{ 'display': 'none' }}>
+                    <div>
+
                         <form ref={form} ></form>
-                        <div className='app__video'  >
+                        <div className='app__video' style={{ 'display': 'none' }} >
                             <video crossOrigin='anonymous' ref={videoRef} autoPlay ></video>
                         </div>
-                        <canvas ref={canvasRef} width="940" height="650" className='app__canvas' />
+                        <canvas style={{ 'display': 'none' }}  ref={canvasRef} width="940" height="650" className='app__canvas' />
                     </div>
 
                     {/* < canvas ref={canvasRef} width="190" height="300" className='app__canvas' /> */}
@@ -567,8 +320,9 @@ function Container(props) {
                 </div>
             ) : (
                 // second join
-                <div>
+                <div className="backdrop">
                     {/* <p>Basic instructions and mulpractice events</p> */}
+                    
                     <Button className="center-start" style={{ 'height': '60px', 'width': '30%' }} colorScheme='blue' variant="solid" size='lg' disabled={loading} onClick={() => { onClick(meetingId); }}>{loading ? ' Please wait...' : 'Start Exam '}!</Button>
                 </div>
             )}
@@ -635,7 +389,7 @@ function HLSPlayer({ url, handleOnLeave }) {
         </>
     );
 }
-function ExamPage() {
+function Exam() {
     const videoRef = useRef();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [play, setPlay] = useState(false);
@@ -681,4 +435,4 @@ function ExamPage() {
 
 }
 
-export default ExamPage;
+export default Exam;
